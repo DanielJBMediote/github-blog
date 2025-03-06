@@ -24,8 +24,9 @@ export const IssueCardContainer = styled.div`
 export const IssueHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  
+  align-items: baseline;
+  gap: 2rem;
+
   span {
     white-space: nowrap;
   }

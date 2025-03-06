@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export const IssueContainer = styled.div`
@@ -29,7 +30,7 @@ export const IssueLinksContainer = styled.div`
   width: 100%;
 `
 
-export const IssueLink = styled.a`
+export const IssueLink = styled(NavLink)`
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -44,4 +45,5 @@ export const IssueLink = styled.a`
 `
 
 export const IssueDetailContent = styled.div`
+  color: ${props => props.theme["text"]}
 `

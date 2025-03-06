@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export const ProfileContainer = styled.div`
@@ -60,7 +61,7 @@ export const ProfileTag = styled.div`
   
   `
 
-export const ProfileLink = styled.a`
+export const ProfileLink = styled(NavLink)`
   position: absolute;
   top: 2rem;
   right: 2rem;
@@ -71,7 +72,8 @@ export const ProfileLink = styled.a`
   cursor: pointer;
   border-bottom: 1px solid transparent;
   text-decoration: none;
-  
+  align-items: baseline;
+
   &:hover {
     border-bottom: 1px solid ${props => props.theme["blue"]};
   }

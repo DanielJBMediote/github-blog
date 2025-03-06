@@ -40,7 +40,7 @@ export const Span = styled.span<TextProps>`
   color: ${props => props.theme["span"]};
 `
 
-export const Link = styled.a`
+export const Link = styled.span`
   font-size: 0.75rem;
   line-height: 160%;
   font-weight: 700;
