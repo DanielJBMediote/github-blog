@@ -15,22 +15,22 @@ Este projeto é uma aplicação web desenvolvida como parte do Desafio 3 da tril
 ## Funcionalidades Principais
 
 1. **Listagem de Issues**: Exibe uma lista paginada de Issues do repositório.
-2. **Detalhes da Issue**: Ao clicar em uma Issue, mostra seus detalhes completos.
+2. **Detalhes da Issue**: Ao clicar em **uma** Issue, mostra seus detalhes completos.
 3. **Busca de Issues**: Permite buscar Issues por título ou conteúdo.
-4. **Filtros**: Possibilita filtrar Issues por labels, descrição, etc.
+4. **Filtros**: Possibilita filtrar Issues por labels, descrição, etc.****
 
 ## Componentes Principais
 
 - **IssueList**: Componente responsável por renderizar a lista de Issues.
 - **IssueDetail**: Exibe os detalhes de uma Issue específica.
-- **SearchBar**: Permite a busca de Issues.
+- **SearchBar**: Permite a busca de Issues.****
 - **Pagination**: Gerencia a paginação da lista de Issues.
 
 ## Integração com a API do GitHub
 
 O projeto utiliza a API do GitHub para buscar dados das Issues. As principais endpoints utilizadas são:
 
-- `GET /repos/{owner}/{repo}/issues`: Para listar as Issues
+- `GET /search/issue?q{query}%20:{user}/{repo}`: Para listar as Issues de um determinado repositório com base na query
 - `GET /repos/{owner}/{repo}/issues/{issue_number}`: Para obter detalhes de uma Issue específica
 
 ## Estilização
@@ -43,6 +43,17 @@ O projeto utiliza a lib [Styled Components]([https://](https://styled-components
 2. **Paginação**: Implementação de paginação para lidar com grandes volumes de Issues.
 3. **Performance**: Otimização de renderização para garantir uma experiência fluida ao usuário.
 4. **TypeScript**: Uso efetivo de tipagem para melhorar a robustez e manutenibilidade do código.
+
+## Principais Bibliotecas
+
+- **React Router Dom**: Para gerenciamento de rotas na aplicação
+- **Axios**: Cliente HTTP para fazer requisições à API do GitHub
+- **Styled Components**: Para estilização com CSS-in-JS
+- **React Markdown**: Para renderizar conteúdo Markdown
+- **Rehype Highlight**: Para destacar sintaxe em blocos de código
+- **Rehype Raw**: Para processar HTML dentro do Markdown
+- **Remark GFM**: Para suporte a GitHub Flavored Markdown
+- **Phosphor Icons**: Biblioteca de ícones
 
 ## Conclusão
 
