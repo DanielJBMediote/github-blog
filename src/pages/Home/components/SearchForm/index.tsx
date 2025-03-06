@@ -8,7 +8,7 @@ export function SearchForm() {
   const { fetchIssues, issues } = useContext(IssueContext)
 
   async function handleBlurQuery(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
+    // e.preventDefault();
 
     const query = e.target.value;
     await fetchIssues(query);
