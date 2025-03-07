@@ -1,3 +1,4 @@
+import { IssueActionsType, IssueReducerActions } from "./actions";
 
 
 export interface GithubUser {
@@ -31,36 +32,21 @@ export interface RepoIssue {
 }
 
 interface IssueStateReducerProps {
-  user: GithubUser | null;
+  user?: GithubUser;
   issues: RepoIssue[];
-  // currentIssue: RepoIssue | null;
-}
-
-interface IssueReducerActions {
-  type: "SET_ALL_ISSUES" | "SET_ONE_ISSUE" | "SET_USER"
-  payload: {
-    issues: RepoIssue[],
-    // currentIssue?: RepoIssue, 
-    user?: GithubUser
-  }
-  ;
+  currentIssue?: RepoIssue;
 }
 
 export function useIssueReducer(state: IssueStateReducerProps, actions: IssueReducerActions) {
 
-  if (actions.type === "SET_ALL_ISSUES") {
-    state.issues = actions.payload.issues
+  switch (actions.type) {
+    case IssueActionsType.FETCH_USER:
+      return { ...state, user: actions.payload.newGithubUser }
+    case IssueActionsType.FETCH_ISSUES:
+      return { ...state, issues: actions.payload.newIssueList }
+    case IssueActionsType.FETCH_ONE_ISSUE:
+      return { ...state, currentIssue: actions.payload.newCurrentIssue }
+    default:
+      return state
   }
-
-  // else if (actions.type === "SET_ONE_ISSUE") {
-  //   if (actions.payload.currentIssue)
-  //     state.currentIssue = actions.payload.currentIssue
-  // }
-
-  else if (actions.type === "SET_USER") {
-    if (actions.payload.user)
-      state.user = actions.payload.user
-  }
-
-  return state;
 }

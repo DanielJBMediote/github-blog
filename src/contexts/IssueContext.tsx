@@ -1,19 +1,14 @@
 import { createContext, PropsWithChildren, useCallback, useEffect, useReducer } from "react";
-import { api } from "../api";
-import { GithubUser, RepoIssue, useIssueReducer } from "../reducers/issue";
+import { GithubUser, RepoIssue, useIssueReducer } from "../reducers/issueReducer";
+import { fetchIssueAction, fetchIssuesAction, fetchUserAction } from "../reducers/issueReducer/actions";
 
-
-interface IssueSearchResult {
-  totalCount: number;
-  items: RepoIssue[]
-}
 
 interface IssueContextProps {
-  user: GithubUser | null;
-  // currentIssue: RepoIssue | null;
+  user?: GithubUser;
+  currentIssue?: RepoIssue;
   issues: RepoIssue[];
 
-  fetchIssue: (issueNumber: number) => Promise<RepoIssue>
+  fetchIssue: (issueNumber: number) => Promise<void>
   fetchIssues: (query?: string) => Promise<void>
 }
 
@@ -22,9 +17,9 @@ export const IssueContext = createContext({} as IssueContextProps)
 export function IssueContextProvider({ children }: PropsWithChildren) {
 
   const [issueState, dispatch] = useReducer(useIssueReducer, {
-    // currentIssue: null,
     issues: [],
-    user: null
+    user: undefined,
+    currentIssue: undefined
   }, (initialStaate) => {
 
     const userJSON = localStorage.getItem("@github-blog:user-state-v1.0.0")
@@ -48,29 +43,16 @@ export function IssueContextProvider({ children }: PropsWithChildren) {
     return initialStaate
   })
 
-  const { /*currentIssue*/ issues, user } = issueState
+  const { currentIssue, issues, user } = issueState
 
   const fetchIssues = useCallback(async (query?: string) => {
     if (!user) throw new Error("Nenhum usuário Github encontrado.");
-
-    if (!query) query = "";
-
-    const response = await api.get<IssueSearchResult>(`/search/issues?q=${query}%20repo:${user.login}/desafio-rockeatseat-coffee-delivery`);
-    dispatch({ type: "SET_ALL_ISSUES", payload: { issues: response.data.items } });
-
-    localStorage.setItem("@github-blog:issues-state-v1.0.0", JSON.stringify(response.data.items));
-
+    dispatch(await fetchIssuesAction(query))
   }, [user])
 
   const fetchIssue = useCallback(async (issueNumber: number) => {
     if (!user) throw new Error("Nenhum usuário Github encontrado.");
-
-    const response = await api.get<RepoIssue>(`/repos/${user.login}/desafio-rockeatseat-coffee-delivery/issues/${issueNumber}`);
-    // dispatch({ type: "SET_ONE_ISSUE", payload: { issues: [], currentIssue: response.data } });
-
-    localStorage.setItem("@github-blog:issue-state-v1.0.0", JSON.stringify(response.data));
-
-    return response.data;
+    dispatch(await fetchIssueAction(issueNumber));
   }, [user])
 
   useEffect(() => {
@@ -82,30 +64,20 @@ export function IssueContextProvider({ children }: PropsWithChildren) {
   }, [fetchIssues])
 
   useEffect(() => {
-    const userJSON = localStorage.getItem("@github-blog:user-state-v1.0.0")
-
-    if (userJSON) {
-      console.log("Ja tem usuário no storage...");
-
-      const userState = JSON.parse(userJSON)
-      dispatch({ type: "SET_USER", payload: { issues: [], user: userState } });
-
-    } else {
-      console.log("Buscando usuário...");
-
-      const fetchUserData = async () => {
-        const response = await api.get<GithubUser>('/users/DanielJBMediote');
-        dispatch({ type: "SET_USER", payload: { issues: [], user: response.data } });
-
-        localStorage.setItem("@github-blog:user-state-v1.0.0", JSON.stringify(response.data))
+    async function loadUser() {
+      try {
+        const action = await fetchUserAction();
+        dispatch(action);
+      } catch (error) {
+        console.error("Erro ao carregar usuário:", error);
       }
-      fetchUserData();
     }
 
-  }, [])
+    loadUser();
+  }, []);
 
   return (
-    <IssueContext.Provider value={{ user, issues, /*currentIssue,*/ fetchIssues, fetchIssue }}>
+    <IssueContext.Provider value={{ user, issues, currentIssue, fetchIssues, fetchIssue }}>
       {children}
     </IssueContext.Provider>
   )

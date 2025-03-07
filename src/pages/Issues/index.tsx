@@ -1,10 +1,9 @@
 import { ArrowLeft, ArrowSquareOut, Calendar, ChatCircle, GithubLogo } from "@phosphor-icons/react";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Link, Text, Title } from "../../components/Texts/styles";
 import { IssueContext } from "../../contexts/IssueContext";
-import { RepoIssue } from "../../reducers/issue";
 import { formattToNow } from "../../utils/formatter";
 import { ProfileTag, ProfileTags } from "../Home/components/Profile/styles";
 import { Markdown } from "./components/Markdown";
@@ -14,17 +13,14 @@ export function Issue() {
 
   const location = useLocation();
   const issueNumber = location.state?.issueNumber as number;
-  const { fetchIssue } = useContext(IssueContext)
+  const { currentIssue, fetchIssue } = useContext(IssueContext)
 
-  const [currentIssue, setCurrentIssue] = useState<RepoIssue | null>(null)
+  // const [currentIssue, setCurrentIssue] = useState<RepoIssue | null>(null)
 
 
   useEffect(() => {
     const fetchCurrentIssue = async () => {
-      const fetchedIssue = await fetchIssue(issueNumber)
-      console.log("fetchedIssue", fetchedIssue);
-
-      setCurrentIssue(fetchedIssue);
+      await fetchIssue(issueNumber)
     }
     fetchCurrentIssue();
   }, [fetchIssue, issueNumber])
